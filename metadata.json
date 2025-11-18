@@ -1,7 +1,7 @@
 
 {
   "name": "Culinary Vision",
-  "description": "Snap a photo of your ingredients, and let AI suggest delicious recipes you can make. It identifies what you have and inspires your next meal.",
+  "description": "Snap a photo of the ingredients you have on hand, tell me your preferences (if any), and I'll provide delicious recipes you can make with full instructions.",
   "requestFramePermissions": [
     "camera"
   ]
