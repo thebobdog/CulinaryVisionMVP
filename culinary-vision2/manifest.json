@@ -1,0 +1,16 @@
+{
+  "short_name": "CulinaryAI",
+  "name": "Culinary Vision",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3565/3565418.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#111827",
+  "background_color": "#111827",
+  "orientation": "portrait"
+}
