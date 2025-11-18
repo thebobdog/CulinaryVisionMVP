@@ -226,7 +226,7 @@ const App: React.FC = () => {
                         </div>
                         
                         <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 text-center px-4">
-                            Snap photos of your fridge, pantry, or freezer. Let AI combine them into a meal.
+                            Snap a photo of the ingredients you have on hand, choose your preferences, and we'll provide delicious recipes you can make with full instructions.
                         </p>
                         
                         {loadingState === LoadingState.ERROR && error && (
