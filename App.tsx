@@ -5,21 +5,22 @@ import type { Ingredient, Recipe } from './types';
 import { identifyIngredientsFromImage, fetchRecipesFromIngredients } from './services/geminiService';
 import Spinner from './components/Spinner';
 import RecipeCard from './components/RecipeCard';
+import TimerOverlay from './components/TimerOverlay';
 
 const CUISINE_OPTIONS = [
     "Open",
-    "Italian",
-    "Mexican",
     "Asian",
-    "Indian",
-    "Mediterranean",
-    "Vegetarian",
-    "Vegan",
-    "Keto",
-    "Paleo",
+    "Comfort Food",
     "Gluten-Free",
+    "Indian",
+    "Italian",
+    "Keto",
+    "Mediterranean",
+    "Mexican",
+    "Paleo",
     "Quick (< 30m)",
-    "Comfort Food"
+    "Vegan",
+    "Vegetarian"
 ];
 
 const App: React.FC = () => {
@@ -226,7 +227,7 @@ const App: React.FC = () => {
                         </div>
                         
                         <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 text-center px-4">
-                            Snap a photo of the ingredients you have on hand, choose your preferences, and we'll provide delicious recipes you can make with full instructions.
+                            Snap a photo of the ingredients you have on hand, tell me your preferences (if any), and I'll provide delicious recipes you can make with full instructions.
                         </p>
                         
                         {loadingState === LoadingState.ERROR && error && (
@@ -234,6 +235,29 @@ const App: React.FC = () => {
                                 {error}
                             </div>
                         )}
+
+                        {/* Input Buttons (Moved to Top) */}
+                        <div className="grid grid-cols-2 gap-3 w-full px-4 mb-8">
+                            <button 
+                                onClick={handleStartCamera} 
+                                className={`w-full ${images.length > 0 ? 'bg-gray-700' : 'bg-teal-600'} hover:bg-opacity-80 active:scale-[0.98] text-white font-bold py-4 px-4 rounded-2xl text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {images.length > 0 ? 'Add Photo' : 'Scan'}
+                            </button>
+                            <button 
+                                onClick={handleUploadClick} 
+                                className="w-full bg-gray-700 hover:bg-gray-600 active:scale-[0.98] text-white font-bold py-4 px-4 rounded-2xl text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2 border border-gray-600"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                </svg>
+                                Upload
+                            </button>
+                        </div>
 
                         {/* Controls Section */}
                         <div className="mb-8 w-full px-2 grid grid-cols-2 gap-4 sm:gap-6">
@@ -311,43 +335,21 @@ const App: React.FC = () => {
                             </div>
                         )}
 
-                        {/* Action Buttons */}
-                        <div className="flex flex-col w-full gap-3 px-4">
-                             {/* Primary Action - Only show if images exist */}
-                             {images.length > 0 && (
+                        {/* Scan Action Button */}
+                         {images.length > 0 && (
+                            <div className="w-full px-4 mb-2">
                                 <button 
                                     onClick={handleAnalyze} 
-                                    className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 active:scale-[0.98] text-white font-bold py-4 px-6 rounded-2xl text-lg transition-all duration-300 shadow-lg shadow-teal-900/50 flex items-center justify-center gap-3 animate-pulse-subtle mb-2"
+                                    className="w-full bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 active:scale-[0.98] text-white font-bold py-4 px-6 rounded-2xl text-lg transition-all duration-300 shadow-lg shadow-teal-900/50 flex items-center justify-center gap-3 animate-pulse-subtle"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                     </svg>
                                     Scan Ingredients ({images.length})
                                 </button>
-                            )}
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <button 
-                                    onClick={handleStartCamera} 
-                                    className={`w-full ${images.length > 0 ? 'bg-gray-700' : 'bg-teal-600'} hover:bg-opacity-80 active:scale-[0.98] text-white font-bold py-4 px-4 rounded-2xl text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2`}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    {images.length > 0 ? 'Add Photo' : 'Scan'}
-                                </button>
-                                <button 
-                                    onClick={handleUploadClick} 
-                                    className="w-full bg-gray-700 hover:bg-gray-600 active:scale-[0.98] text-white font-bold py-4 px-4 rounded-2xl text-base transition-all duration-300 shadow-lg flex items-center justify-center gap-2 border border-gray-600"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                                    </svg>
-                                    Upload
-                                </button>
                             </div>
-                        </div>
+                        )}
+
                         <input 
                             type="file" 
                             accept="image/*" 
